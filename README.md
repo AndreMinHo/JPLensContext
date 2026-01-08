@@ -2,7 +2,7 @@
 
 ## Objective
 
-Create a lightweight application that can recognize and provide a confidence score for Japanese text using **[EasyOCR](https://github.com/JaidedAI/EasyOCR)** and then translate it to English while also providing AI-generated context and explanation. 
+Create a lightweight application that can recognize and provide a confidence score for Japanese text using **[EasyOCR](https://github.com/JaidedAI/EasyOCR)** and then translate it to English using **[translatepy](https://github.com/Animenosekai/translate)** while also providing AI-generated context and explanation. 
 
 ##  Current Features
 
