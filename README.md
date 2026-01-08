@@ -32,9 +32,61 @@ uvicorn backend.main:app --reload
 
 ## API Endpoints
 
-- `GET /health` - Health check
-- `POST /translate-image` - Upload image for OCR + translation
-- `POST /translate-text` - Direct text translation
+### `GET /health`
+Health check endpoint.
+
+**Response:**
+```json
+{
+  "status": "ok"
+}
+```
+
+### `POST /translate-image`
+Upload an image containing Japanese text for OCR and translation.
+
+**Response Example:**
+```json
+{
+  "ocr": {
+    "text": "ご飯 定食",
+    "confidence": 0.9919165516812564
+  },
+  "translation": {
+    "raw_text": "ご飯 定食",
+    "detected_language": "ja",
+    "translation": {
+      "literal": "rice set meal",
+      "natural": "rice set meal"
+    },
+    "context": {
+      "usage": "general",
+      "formality": "formal",
+      "cultural_notes": []
+    },
+    "ambiguity": {
+      "is_ambiguous": false,
+      "possible_meanings": []
+    }
+  }
+}
+```
+
+### `POST /translate-text`
+Translate Japanese text directly.
+
+**Request Body:**
+```json
+{
+  "text": "こんにちは"
+}
+```
+
+**Response:** Same structure as translation field above.
+
+### API Documentation
+- **Interactive Docs:** `http://localhost:8000/docs`
+- **Alternative Docs:** `http://localhost:8000/redoc`
 
 ## Testing the API
 
