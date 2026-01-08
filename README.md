@@ -2,7 +2,7 @@
 
 ## Objective
 
-A lightweight API service that recognizes Japanese text from images using **[EasyOCR](https://github.com/JaidedAI/EasyOCR)**, translates it to English using **[translatepy](https://github.com/Animenosekai/translate)**, and provides contextual analysis for better understanding.
+A lightweight API service that recognizes Japanese text from images using **[EasyOCR](https://github.com/JaidedAI/EasyOCR)**, translates it to English using **[translatepy](https://github.com/Animenosekai/translate)**.
 
 ## Features
 
