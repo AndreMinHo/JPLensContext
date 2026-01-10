@@ -14,6 +14,8 @@ A lightweight API service that recognizes Japanese text from images using **[Eas
 
 ## Quick Start
 
+### Local Development (Python Virtual Environment)
+
 1. **Set up virtual environment:**
 ```bash
 py -3.12 -m venv .venv
@@ -29,6 +31,26 @@ uvicorn backend.main:app --reload
 3. **Access the API:**
 - **Interactive Documentation:** http://localhost:8000/docs
 - **API Base URL:** http://localhost:8000
+
+### Local Development (Docker)
+
+1. **Build and run with Docker Compose:**
+```bash
+docker-compose up --build
+```
+
+2. **Access the API:**
+- **Interactive Documentation:** http://localhost:8000/docs
+- **API Base URL:** http://localhost:8000
+
+### Production Deployment (Railway)
+
+1. **Connect your GitHub repository to Railway**
+2. **Railway will automatically detect and use the Dockerfile**
+3. **Set environment variables if needed (currently none required)**
+4. **Deploy!**
+
+The application will be available at the Railway-provided URL with the same API endpoints.
 
 ## API Endpoints
 
@@ -95,4 +117,3 @@ Translate Japanese text directly.
 python -m tests.test_ocr
 python -m tests.test_translation
 ```
-

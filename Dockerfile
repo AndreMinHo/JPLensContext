@@ -1,10 +1,24 @@
-# Use Python 3.12 slim image
-FROM python:3.12-slim
+# Build stage
+FROM python:3.12-slim as builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies for OpenCV and PyTorch
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Runtime stage
+FROM python:3.12-slim
+
+# Install runtime system dependencies for OpenCV and PyTorch
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     libsm6 \
@@ -14,26 +28,29 @@ RUN apt-get update && apt-get install -y \
     libgthread-2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt .
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy source code
-COPY . .
+# Set working directory
+WORKDIR /app
 
 # Create non-root user
-RUN useradd --create-home --shell /bin/bash app \
-    && chown -R app:app /app
+RUN useradd --create-home --shell /bin/bash app
+
+# Copy installed dependencies from builder stage
+COPY --from=builder /root/.local /home/app/.local
+
+# Copy source code
+COPY backend/ ./backend/
+
+# Change ownership to app user
+RUN chown -R app:app /app /home/app/.local
+
+# Switch to non-root user
 USER app
+
+# Set Python path
+ENV PATH=/home/app/.local/bin:$PATH
 
 # Expose port
 EXPOSE 8000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health')"
 
 # Start the application
 CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
