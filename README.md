@@ -45,10 +45,18 @@ docker-compose up --build
 
 ### Production Deployment (Railway)
 
-1. **Connect your GitHub repository to Railway**
-2. **Railway will automatically detect and use the Dockerfile**
-3. **Set environment variables if needed (currently none required)**
+#### Option 1: Railpack (Recommended for Lightweight Deployments)
+1. **Delete `railway.json`** (Railway will auto-detect Python and use Railpack)
+2. **Connect your GitHub repository to Railway**
+3. **Railpack automatically handles Python dependencies and system libraries**
 4. **Deploy!**
+
+#### Option 2: Docker (For Complex System Dependencies)
+1. **Keep `railway.json`** (specifies Dockerfile builder)
+2. **Connect your GitHub repository to Railway**
+3. **Railway will build and deploy using the optimized Dockerfile**
+4. **Set environment variables if needed (currently none required)**
+5. **Deploy!**
 
 The application will be available at the Railway-provided URL with the same API endpoints.
 
