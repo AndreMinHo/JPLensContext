@@ -29,8 +29,8 @@ uvicorn backend.main:app --reload
 ```
 
 3. **Access the API:**
-- **Interactive Documentation:** http://localhost:8000/docs
-- **API Base URL:** http://localhost:8000
+- **Interactive Documentation:** http://localhost:8080/docs
+- **API Base URL:** http://localhost:8080
 
 ### Local Development (Docker)
 
@@ -40,8 +40,8 @@ docker-compose up --build
 ```
 
 2. **Access the API:**
-- **Interactive Documentation:** http://localhost:8000/docs
-- **API Base URL:** http://localhost:8000
+- **Interactive Documentation:** http://localhost:8080/docs
+- **API Base URL:** http://localhost:8080
 
 ### Production Deployment (Railway)
 
@@ -115,8 +115,8 @@ Translate Japanese text directly.
 **Response:** Same structure as translation field above.
 
 ### API Documentation
-- **Interactive Docs:** `http://localhost:8000/docs`
-- **Alternative Docs:** `http://localhost:8000/redoc`
+- **Interactive Docs:** `http://localhost:8080/docs`
+- **Alternative Docs:** `http://localhost:8080/redoc`
 
 ## Testing the API
 
