@@ -2,7 +2,7 @@ import os
 from typing import Tuple
 
 # Disable PaddleOCR model connectivity check for deployment environments
-os.environ.setdefault('DISABLE_MODEL_SOURCE_CHECK', 'True')
+os.environ['DISABLE_MODEL_SOURCE_CHECK'] = 'True'
 
 from paddleocr import PaddleOCR
 import numpy as np
