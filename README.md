@@ -2,7 +2,7 @@
 
 ## Objective
 
-A lightweight API service that recognizes Japanese text from images using **[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)**, translates it to English using **[translatepy](https://github.com/Animenosekai/translate)**.
+A lightweight API service that recognizes Japanese text from images using **[manga-ocr](https://github.com/kha-white/manga-ocr)**, translates it to English using **[translatepy](https://github.com/Animenosekai/translate)**.
 
 ## Features
 
@@ -45,17 +45,16 @@ docker-compose up --build
 
 ### Production Deployment (Railway)
 
-#### Docker Deployment (Required for PaddleOCR)
-Due to PaddleOCR's model initialization requirements, Docker deployment is required:
+#### Docker Deployment
+Docker deployment is required for consistent dependency management:
 
 1. **Keep `railway.json`** (forces Docker builder)
 2. **Connect your GitHub repository to Railway**
 3. **Railway will build and deploy using the optimized Dockerfile**
-4. **The Docker build includes environment variables to bypass model connectivity checks**
-5. **Railway automatically sets the PORT environment variable**
-6. **Deploy!**
+4. **Railway automatically sets the PORT environment variable**
+5. **Deploy!**
 
-**Note:** PaddleOCR performs model connectivity checks during initialization. The Dockerfile includes `DISABLE_MODEL_SOURCE_CHECK=True` to prevent deployment failures in Railway's environment. The startup script (`start.sh`) properly handles Railway's PORT environment variable.
+**Note:** The startup script (`start.sh`) properly handles Railway's PORT environment variable.
 
 The application will be available at the Railway-provided URL with the same API endpoints.
 

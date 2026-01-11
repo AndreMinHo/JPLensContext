@@ -1,10 +1,6 @@
 # Use Python 3.12 slim image
 FROM python:3.12-slim
 
-# Disable PaddleOCR model source connectivity check
-ARG DISABLE_MODEL_SOURCE_CHECK=True
-ENV DISABLE_MODEL_SOURCE_CHECK=$DISABLE_MODEL_SOURCE_CHECK
-
 # Set working directory
 WORKDIR /app
 
@@ -24,8 +20,7 @@ COPY requirements-prod.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements-prod.txt
 
-# Copy models, source code, and startup script
-COPY models/ ./models/
+# Copy source code and startup script
 COPY backend/ ./backend/
 COPY start.sh ./start.sh
 
