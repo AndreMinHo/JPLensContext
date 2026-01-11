@@ -24,7 +24,8 @@ COPY requirements-prod.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements-prod.txt
 
-# Copy source code
+# Copy models and source code
+COPY models/ ./models/
 COPY backend/ ./backend/
 
 # Create non-root user

@@ -8,17 +8,15 @@ from paddleocr import PaddleOCR
 import numpy as np
 from PIL import Image
 
+# Get the directory where models are stored (works for both local dev and Docker)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)  # Go up one level from backend/ocr/
+models_dir = os.path.join(project_root, 'models')
 
-# Load the reader ONCE (expensive operation)
-# Use local models to avoid connectivity checks in deployment
+# Load the reader ONCE (expensive operation) with local models
 _reader = PaddleOCR(
     use_angle_cls=True,
-    lang='japan',
-    show_log=False,
-    use_gpu=False,  # Disable GPU to avoid additional dependencies
-    det_model_dir=None,  # Use default cached models
-    rec_model_dir=None,  # Use default cached models
-    cls_model_dir=None   # Use default cached models
+    lang='japan'
 )
 
 
