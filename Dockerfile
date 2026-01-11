@@ -20,12 +20,8 @@ COPY requirements-prod.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements-prod.txt
 
-# Copy source code and startup script
+# Copy source code
 COPY backend/ ./backend/
-COPY start.sh ./start.sh
-
-# Make startup script executable
-RUN chmod +x start.sh
 
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app \
@@ -35,5 +31,5 @@ USER app
 # Expose port
 EXPOSE 8000
 
-# Start the application using the startup script
-CMD ["./start.sh"]
+# Start the application
+CMD uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}

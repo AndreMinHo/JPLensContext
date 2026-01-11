@@ -2,7 +2,7 @@
 
 ## Objective
 
-A lightweight API service that recognizes Japanese text from images using **[manga-ocr](https://github.com/kha-white/manga-ocr)**, translates it to English using **[translatepy](https://github.com/Animenosekai/translate)**.
+A lightweight API service that recognizes Japanese text from images using **[EasyOCR](https://github.com/JaidedAI/EasyOCR)**, translates it to English using **[translatepy](https://github.com/Animenosekai/translate)**.
 
 ## Features
 
@@ -45,16 +45,18 @@ docker-compose up --build
 
 ### Production Deployment (Railway)
 
-#### Docker Deployment
-Docker deployment is required for consistent dependency management:
+#### Option 1: Railpack (Recommended for Lightweight Deployments)
+1. **Delete `railway.json`** (Railway will auto-detect Python and use Railpack)
+2. **Connect your GitHub repository to Railway**
+3. **Railpack automatically handles Python dependencies and system libraries**
+4. **Deploy!**
 
-1. **Keep `railway.json`** (forces Docker builder)
+#### Option 2: Docker (For Complex System Dependencies)
+1. **Keep `railway.json`** (specifies Dockerfile builder)
 2. **Connect your GitHub repository to Railway**
 3. **Railway will build and deploy using the optimized Dockerfile**
-4. **Railway automatically sets the PORT environment variable**
+4. **Set environment variables if needed (currently none required)**
 5. **Deploy!**
-
-**Note:** The startup script (`start.sh`) properly handles Railway's PORT environment variable.
 
 The application will be available at the Railway-provided URL with the same API endpoints.
 
