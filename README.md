@@ -52,9 +52,10 @@ Due to PaddleOCR's model initialization requirements, Docker deployment is requi
 2. **Connect your GitHub repository to Railway**
 3. **Railway will build and deploy using the optimized Dockerfile**
 4. **The Docker build includes environment variables to bypass model connectivity checks**
-5. **Deploy!**
+5. **Railway automatically sets the PORT environment variable**
+6. **Deploy!**
 
-**Note:** PaddleOCR performs model connectivity checks during initialization. The Dockerfile includes `DISABLE_MODEL_SOURCE_CHECK=True` to prevent deployment failures in Railway's environment.
+**Note:** PaddleOCR performs model connectivity checks during initialization. The Dockerfile includes `DISABLE_MODEL_SOURCE_CHECK=True` to prevent deployment failures in Railway's environment. The startup script (`start.sh`) properly handles Railway's PORT environment variable.
 
 The application will be available at the Railway-provided URL with the same API endpoints.
 
