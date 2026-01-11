@@ -2,6 +2,7 @@ from typing import Tuple
 from google.cloud import vision
 from google.oauth2 import service_account
 import os
+import json
 from PIL import Image
 import io
 
@@ -9,14 +10,28 @@ import io
 def _get_vision_client():
     """Get Google Vision API client with authentication."""
     # Try to get credentials from environment
-    credentials_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+    credentials_value = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
-    if credentials_path and os.path.exists(credentials_path):
-        credentials = service_account.Credentials.from_service_account_file(credentials_path)
-        return vision.ImageAnnotatorClient(credentials=credentials)
-    else:
+    if not credentials_value:
         # Use default credentials (for environments with Application Default Credentials)
         return vision.ImageAnnotatorClient()
+
+    # Check if it's a file path
+    if os.path.exists(credentials_value):
+        credentials = service_account.Credentials.from_service_account_file(credentials_value)
+        return vision.ImageAnnotatorClient(credentials=credentials)
+
+    # Check if it's JSON content (starts with '{')
+    if credentials_value.strip().startswith('{'):
+        try:
+            credentials_info = json.loads(credentials_value)
+            credentials = service_account.Credentials.from_service_account_info(credentials_info)
+            return vision.ImageAnnotatorClient(credentials=credentials)
+        except json.JSONDecodeError:
+            raise Exception(f"Invalid JSON in GOOGLE_APPLICATION_CREDENTIALS: {credentials_value[:100]}...")
+
+    # If neither file nor JSON, try default credentials
+    return vision.ImageAnnotatorClient()
 
 
 def read_text(image_path: str) -> Tuple[str, float]:
