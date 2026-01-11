@@ -1,31 +1,28 @@
 from typing import Tuple
-import easyocr
+from paddleocr import PaddleOCR
 import numpy as np
 from PIL import Image
 
 
 # Load the reader ONCE (expensive operation)
-_reader = easyocr.Reader(['ja', 'en'], gpu=False)
+_reader = PaddleOCR(use_angle_cls=True, lang='japan')
 
 
 def read_text(image_path: str) -> Tuple[str, float]:
 
-    image = Image.open(image_path).convert("RGB")
-    image_np = np.array(image)
+    results = _reader.ocr(image_path)
 
-    results = _reader.readtext(image_np)
-
-    if not results:
+    if not results or not results[0]:
         return "", 0.0
 
-    texts = []
-    confidences = []
+    # Extract texts and scores from the result dictionary
+    texts = results[0].get('rec_texts', [])
+    confidences = results[0].get('rec_scores', [])
 
-    for (_, text, confidence) in results:
-        texts.append(text)
-        confidences.append(confidence)
+    if not texts:
+        return "", 0.0
 
     combined_text = " ".join(texts)
-    avg_confidence = sum(confidences) / len(confidences)
+    avg_confidence = sum(confidences) / len(confidences) if confidences else 0.0
 
     return combined_text, avg_confidence
