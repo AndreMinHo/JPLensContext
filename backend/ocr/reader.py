@@ -1,11 +1,25 @@
+import os
 from typing import Tuple
+
+# Disable PaddleOCR model connectivity check for deployment environments
+os.environ.setdefault('DISABLE_MODEL_SOURCE_CHECK', 'True')
+
 from paddleocr import PaddleOCR
 import numpy as np
 from PIL import Image
 
 
 # Load the reader ONCE (expensive operation)
-_reader = PaddleOCR(use_angle_cls=True, lang='japan')
+# Use local models to avoid connectivity checks in deployment
+_reader = PaddleOCR(
+    use_angle_cls=True,
+    lang='japan',
+    show_log=False,
+    use_gpu=False,  # Disable GPU to avoid additional dependencies
+    det_model_dir=None,  # Use default cached models
+    rec_model_dir=None,  # Use default cached models
+    cls_model_dir=None   # Use default cached models
+)
 
 
 def read_text(image_path: str) -> Tuple[str, float]:

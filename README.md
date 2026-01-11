@@ -45,18 +45,16 @@ docker-compose up --build
 
 ### Production Deployment (Railway)
 
-#### Option 1: Railpack (Recommended for Lightweight Deployments)
-1. **Delete `railway.json`** (Railway will auto-detect Python and use Railpack)
-2. **Connect your GitHub repository to Railway**
-3. **Railpack automatically handles Python dependencies and system libraries**
-4. **Deploy!**
+#### Docker Deployment (Required for PaddleOCR)
+Due to PaddleOCR's model initialization requirements, Docker deployment is required:
 
-#### Option 2: Docker (For Complex System Dependencies)
-1. **Keep `railway.json`** (specifies Dockerfile builder)
+1. **Keep `railway.json`** (forces Docker builder)
 2. **Connect your GitHub repository to Railway**
 3. **Railway will build and deploy using the optimized Dockerfile**
-4. **Set environment variables if needed (currently none required)**
+4. **The Docker build includes environment variables to bypass model connectivity checks**
 5. **Deploy!**
+
+**Note:** PaddleOCR performs model connectivity checks during initialization. The Dockerfile includes `DISABLE_MODEL_SOURCE_CHECK=True` to prevent deployment failures in Railway's environment.
 
 The application will be available at the Railway-provided URL with the same API endpoints.
 
