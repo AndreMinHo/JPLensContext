@@ -2,7 +2,7 @@
 
 ## Objective
 
-A lightweight API service that recognizes Japanese text from images using **[EasyOCR](https://github.com/JaidedAI/EasyOCR)**, translates it to English using **[translatepy](https://github.com/Animenosekai/translate)**.
+A lightweight API service that recognizes Japanese text from images using **[Google Cloud Vision API](https://cloud.google.com/vision)**, translates it to English using **[translatepy](https://github.com/Animenosekai/translate)**.
 
 ## Features
 
@@ -11,6 +11,29 @@ A lightweight API service that recognizes Japanese text from images using **[Eas
 - ✅ English translation with basic context analysis (formality detection)
 - ✅ REST API with FastAPI for easy integration
 - ✅ Automatic interactive API documentation
+
+## Google Cloud Setup
+
+This application uses Google Cloud Vision API for OCR. You'll need to set up Google Cloud credentials:
+
+1. **Create a Google Cloud Project:**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select an existing one
+
+2. **Enable Vision API:**
+   - Enable the Cloud Vision API for your project
+
+3. **Create Service Account:**
+   - Go to IAM & Admin > Service Accounts
+   - Create a new service account with "Viewer" role
+   - Generate a JSON key for the service account
+
+4. **Set Environment Variable:**
+   ```bash
+   export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json"
+   ```
+
+   For Railway deployment, add this as an environment variable in your Railway project settings.
 
 ## Quick Start
 

@@ -1,31 +1,82 @@
 from typing import Tuple
-import easyocr
-import numpy as np
+from google.cloud import vision
+from google.oauth2 import service_account
+import os
 from PIL import Image
+import io
 
 
-# Load the reader ONCE (expensive operation)
-_reader = easyocr.Reader(['ja', 'en'], gpu=False)
+def _get_vision_client():
+    """Get Google Vision API client with authentication."""
+    # Try to get credentials from environment
+    credentials_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+
+    if credentials_path and os.path.exists(credentials_path):
+        credentials = service_account.Credentials.from_service_account_file(credentials_path)
+        return vision.ImageAnnotatorClient(credentials=credentials)
+    else:
+        # Use default credentials (for environments with Application Default Credentials)
+        return vision.ImageAnnotatorClient()
 
 
 def read_text(image_path: str) -> Tuple[str, float]:
+    """
+    Extract text from image using Google Cloud Vision API.
 
-    image = Image.open(image_path).convert("RGB")
-    image_np = np.array(image)
+    Args:
+        image_path: Path to the image file
 
-    results = _reader.readtext(image_np)
+    Returns:
+        Tuple of (extracted_text, average_confidence)
+    """
 
-    if not results:
+    client = _get_vision_client()
+
+    # Load and prepare image
+    with Image.open(image_path) as img:
+        img = img.convert("RGB")
+
+        # Convert to bytes
+        img_byte_arr = io.BytesIO()
+        img.save(img_byte_arr, format='PNG')
+        img_bytes = img_byte_arr.getvalue()
+
+    # Create Vision API image object
+    image = vision.Image(content=img_bytes)
+
+    # Configure text detection request with Japanese language hint
+    image_context = vision.ImageContext(
+        language_hints=['ja-JP', 'en']
+    )
+
+    # Perform text detection
+    response = client.text_detection(
+        image=image,
+        image_context=image_context
+    )
+
+    # Check for errors
+    if response.error.message:
+        raise Exception(f"Vision API error: {response.error.message}")
+
+    # Extract text and confidence
+    texts = response.text_annotations
+
+    if not texts:
         return "", 0.0
 
-    texts = []
-    confidences = []
+    # The first text annotation contains all the detected text
+    full_text = texts[0].description.strip()
 
-    for (_, text, confidence) in results:
-        texts.append(text)
-        confidences.append(confidence)
+    # Calculate average confidence from individual text blocks
+    if len(texts) > 1:
+        confidences = []
+        for text_annotation in texts[1:]:  # Skip first annotation (full text)
+            if hasattr(text_annotation, 'confidence') and text_annotation.confidence > 0:
+                confidences.append(text_annotation.confidence)
 
-    combined_text = " ".join(texts)
-    avg_confidence = sum(confidences) / len(confidences)
+        avg_confidence = sum(confidences) / len(confidences) if confidences else 0.8
+    else:
+        avg_confidence = 0.8  # Default confidence when we can't determine individual text confidence
 
-    return combined_text, avg_confidence
+    return full_text, avg_confidence

@@ -7,8 +7,8 @@ from backend.schemas.translation_schema import (
 )
 
 
-# Initialize translator once
-_translator = Translator()
+# Initialize translator lazily
+_translator = None
 
 
 def translate_text(text: str) -> TranslationResponse:
@@ -29,6 +29,10 @@ def translate_text(text: str) -> TranslationResponse:
             context=ContextInfo(usage="", formality="", cultural_notes=[]),
             ambiguity=AmbiguityInfo(is_ambiguous=False, possible_meanings=[])
         )
+
+    global _translator
+    if _translator is None:
+        _translator = Translator()
 
     try:
         # Translate to English
