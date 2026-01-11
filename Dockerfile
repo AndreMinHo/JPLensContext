@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
 COPY requirements-prod.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements-prod.txt
+RUN pip install -r requirements-prod.txt
 
 # Copy source code
 COPY backend/ ./backend/
